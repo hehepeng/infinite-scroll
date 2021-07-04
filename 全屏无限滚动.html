@@ -1,0 +1,93 @@
+<!-- js原生实现局部内容无限滚动 -->
+<!--这种无限滚动的元素的高度必须小于等于内部元素的高度-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>全屏无限滚动</title>
+</head>
+<body>
+</body>
+<script type='text/javascript'>
+    const style = document.createElement('style')
+    style.innerHTML = `
+        .item {
+            width: 100%;
+            height: ${window.innerHeight+100}px;
+            background-color: aquamarine;
+        }
+    `
+    document.body.append(style)
+</script>
+
+<!-- 通过在document上绑定滚动事件实现实质上的全屏无限滚动效果 -->
+<!-- <script type="text/javascript">
+    const style = document.createElement('style')
+    style.innerHTML = `
+        .item {
+            width: 100%;
+            height: ${window.innerHeight+100}px;
+            background-color: aquamarine;
+        }
+    `
+    document.body.append(style)
+
+    let item = document.createElement('div')
+    item.id = 'item'
+    document.body.appendChild(item)
+
+    document.addEventListener('scroll', function() {
+        console.log('scroll')
+        if (!this.delay) {
+            this.delay = true;
+            const st = setTimeout(() => {
+                this.scrollTop + this.offsetHeight -10 > this.scrollHeight;
+                const item = document.createElement('div');
+                item.id = 'item';
+                document.body.appendChild(item)
+                this.delay = false
+                clearTimeout(st)
+            }, 1000);
+        }
+    }, false)
+</script> -->
+
+<!-- 在body里添加div元素，使该div占据全屏，在该div里实现全屏无限滚动，但其实该div无法真的完全占据屏幕，如果完全占据，body的滚动条将出现，我们绑定的滚动事件，没有绑定到body的滚动条上，可以通过隐藏body的滚动条，实现全屏无限滚动 -->
+<script type="text/javascript">
+    let div = document.createElement('div')
+    document.body.style.position = 'relative'
+    document.body.style.overflow = 'hidden'
+    div.style.width = '100%'
+    div.style.height = (window.innerHeight) + 'px'
+    div.style.position = 'absolute'
+    div.style.top = '0'
+    div.style.left = '0'
+    div.style.right = '-17px'
+    div.style.bottom = '0'
+    div.style.overflowX = 'hidden'
+    div.style.overflowY = 'scroll'
+    document.body.appendChild(div)
+
+    let item = document.createElement('div')
+    item.classList.add('item') // 纯js只能通过这种方式添加class
+    div.appendChild(item)
+
+    div.addEventListener('scroll', function() {
+        console.log('scroll')
+        if (!this.delay) {
+            this.delay = true;
+            const st = setTimeout(() => {
+                this.scrollTop + this.offsetHeight - 10 > this.scrollHeight
+                const item = document.createElement('div')
+                item.classList.add('item')
+                this.appendChild(item)
+                this.delay = false
+                clearTimeout(st)
+            }, 1000);
+        }
+    }, false)
+</script>
+</html>

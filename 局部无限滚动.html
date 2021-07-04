@@ -1,0 +1,43 @@
+<!-- js原生实现局部内容无限滚动 -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>局部无限滚动</title>
+    <style>
+        #box{
+            width: 100vw;
+            height: 300px;
+            overflow: auto;
+        }
+        #item{
+            height: 400px;
+            background-color: aquamarine;
+        }
+    </style>
+</head>
+<body>
+    <div id="box">
+        <div id="item"></div>
+    </div>
+</body>
+
+<script type="text/javascript">
+    document.getElementById('box').addEventListener('scroll', function() {
+        if (!this.delay) {
+            this.delay = true;
+            const st = setTimeout(() => {
+                this.scrollTop + this.offsetHeight -10 > this.scrollHeight;
+                const item = document.createElement('div');
+                item.id = 'item';
+                this.appendChild(item);
+                this.delay = false;
+                clearTimeout(st);
+            }, 1000);
+        }
+    }, false)
+</script>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <title>图片练习</title>
+        <style>
+            *{padding: 0;margin: 0;}
+            body{
+                overflow: hidden;
+            }
+            ul,li{
+                list-style: none;
+            }
+            #box{
+                position: absolute;
+                top: 60%;
+                left: 50%;
+                width: 800px;
+                height: 450px;
+                margin: -225px 0 0 -400px;
+                overflow: hidden;  /*保证屏幕上只有一个图片可见*/
+            }
+            #box::after{
+                content: "点击屏幕暂停";
+                display: block;
+                position: absolute;
+                left: 320px;
+                top: 30px;
+                font-size: 30px;
+                color: white;
+                
+            }
+            ul{
+                position: relative;
+                left: 0;
+                
+                width: 600%;
+                height: 450px;
+            }
+            li{
+                width: 800px;
+                display: inline-block;
+                float: left;
+            }
+            ul img{
+                vertical-align: top;
+                width: 800px;
+                
+            }
+        </style>
+    </head>
+
+    <body >
+        <div id="box">
+            <ul></ul>
+        </div>
+    </body>
+
+</html>
+<script type="text/javascript">
+    let list = [{
+        url: 'https://www.bing.com/az/hprichbg/rb/SingingRingingTree_ZH-CN12497946624_1920x1080.jpg'
+    }, {
+        url: 'https://th.bing.com/th/id/OIP.5zJa1kPaUY4P0w_4vOOrIQAAAA?w=200&h=200&c=7&o=5&pid=1.7'
+    }, {
+        url: 'https://th.bing.com/th/id/OIP.HBsy4_icdhBQ6TdOyNxc-AHaFO?w=200&h=141&c=7&o=5&pid=1.7'
+    }, {
+        url: 'https://pic4.zhimg.com/v2-588b5a5dd202c4ec9c7f258df5df2f79_r.jpg'
+    }]
+
+    let ul = document.getElementsByTagName("ul")[0]
+
+    let lis = []
+
+    for (let i=0,len=list.length+1; i<len; i++) {
+        let img = document.createElement('img')
+        let li = document.createElement('li')
+
+        if (i == len-1) {
+            img.setAttribute('src', list[0].url)
+            li.appendChild(img)
+            lis.push(li)
+            break
+        }
+
+        img.setAttribute('src', list[i].url)
+        li.appendChild(img)
+
+        lis.push(li)
+    }
+
+    for (let i=0,len=lis.length; i<len; i++) {
+        ul.appendChild(lis[i])
+    }
+
+    ul.position = 0        // 自定义偏移量
+
+    let timer = null
+    let width = 800
+    let star = true // 暂停标志
+    let pageTotal = list.length // 总页数
+
+    timer = setInterval(move, 0) // 定时翻页
+
+    function move () {
+        autoplay(ul, width, pageTotal)
+    }
+
+    //定义自动播放函数
+    function autoplay (object, width, pageTotal) {
+
+        object.position -= object.offsetWidth/4000
+
+        // 图片的偏移量根据图片的宽度来计算，达到所有图片宽度的总和时，重置偏移量，由于第一张图和最后一张图,所以看起来像是无缝衔接
+        if (object.position < (-width*pageTotal)) {
+            object.position = 0
+        }
+
+        object.style.left = object.position+"px"
+    }
+
+    //点击暂停动画
+    document.onclick = function(){
+        if (star) {
+            clearInterval(timer)
+            star = false
+        } else {
+            timer = setInterval(move,0)
+            star = true
+        }
+    }
+</script>
